@@ -5,13 +5,16 @@ require_once '../Config.class.php';
 
 Flight::register('pm', 'PersistanceManager', [Config::DB]);
 
-Flight::route('GET /', function() {
-    echo json_encode(Flight::pm()->get_all_posts());
-});
-
-// Flight::route('POST /', function(){
-    
-// })
+Flight::route('POST /', function(){
+    $request = Flight::request();
+    $user = [
+      'username' => $request->data->username,
+      'email' => $request->data->email,
+      'pass' => $request->data->pass
+    ];
+    $added_user = Flight::pm()->add_user($user);
+    Flight::json($added_user);
+  });
 
 Flight::start();
 ?>  

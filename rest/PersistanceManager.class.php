@@ -7,10 +7,18 @@ class PersistanceManager{
     $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
   }
-
-  public function get_all_posts(){
-    $query = "SELECT * FROM posts";
-    return $this->pdo->query($query)->fetchAll();
+  public function add_user($user){
+    $query = "INSERT INTO users
+            (username,
+             email,
+             password)
+            VALUES (:username,
+                    :email,
+                    :pass)";
+    $statement = $this->pdo->prepare($query);
+    $statement->execute($user);
+    $user['id'] = $this->pdo->lastInsertId();
+    return $user;
   }
 }
 ?>

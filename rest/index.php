@@ -5,9 +5,6 @@ require_once 'Config.class.php';
 
 Flight::register('pm', 'PersistanceManager', [Config::DB]);
 
-Flight::route('GET /', function() {
-    echo json_encode(Flight::pm()->get_all_posts());
-});
 
 Flight::start();
 ?>  
