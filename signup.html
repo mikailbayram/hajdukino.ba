@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/signup.css">
+
+    <!-- Modernizr JS -->
+    <script src="js/modernizr-2.6.2.min.js"></script>
+    <!-- jQuery -->
+    <script src="js/jquery.min.js"></script>
+    <!-- jQuery Easing -->
+    <!-- Bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Waypoints -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+
+</head>
+
+<body>
+
+    <div class="colorlib-loader"></div>
+
+    <div id="page">
+        <div class="col-md-4 col-md-offset-4 signup">
+            <form id="signup-form" method="post" action="rest/user/register">
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" class="form-control" id="username" placeholder="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="pass" class="form-control" id="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-success">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="gototop js-top">
+        <a href="#" class="js-gotop">
+            <i class="icon-arrow-up2"></i>
+        </a>
+    </div>
+    <script>
+        $("#signup-form").validate({
+            rules: {
+                email: {
+                    minlength: 6
+                },
+                username: {
+                    minlength: 3
+                },
+                pass: {
+                    minlength: 6
+                }
+            },
+            messages: {
+                email: {
+                    required: "Please enter your email address",
+                    minlength: "Unesi der koje slovo",
+                },
+                username: {
+                    required: "Please enter your username",
+                    minlength: "Unesi der koje slovo"
+                },
+                pass: {
+                    required: "Please enter a password",
+                    minlength: "Unesi der koje slovo"
+                }
+            },
+            submitHandler: function (form) {
+                $.post('rest/user/register', $('#signup-form').serialize(), function (added_user) {
+                    alert('User Registered');
+                    window.location.href="index.html"
+                });
+            }
+        });
+    </script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <!-- Stellar Parallax -->
+    <!-- Flexslider -->
+    <script src="js/jquery.flexslider-min.js"></script>
+    <!-- Owl carousel -->
+    <!-- Main -->
+    <script src="js/main.js"></script>
+
+
+</body>
+
+</html>

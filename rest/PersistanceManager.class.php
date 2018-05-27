@@ -18,16 +18,14 @@ class PersistanceManager{
     $emailCheck->execute();
 
     if($usernameCheck->rowCount() > 0)
-      $x["error"]["username"] = "username already exists";
+      return $x["error"]["username"] = "username already exists";
 
     if($emailCheck->rowCount() > 0)
-      $x["error"]["email"] = "email already exists";
+      return $x["error"]["email"] = "email already exists";
     
     if(strlen($user['pass'])<6)
-      $x["error"]["password"] = "password should be atleast 6 characters long";
+      return $x["error"]["password"] = "password should be atleast 6 characters long";
 
-    if($x["error"])
-      return $x;
     
     $query = "INSERT INTO users
             (username,
@@ -40,6 +38,24 @@ class PersistanceManager{
     $statement->execute($user);
     $user['id'] = $this->pdo->lastInsertId();
     return $user;
+  }
+
+  //find if username matches password
+  public function find_user($user){
+    $usernameCheck = $this->pdo->prepare("SELECT username FROM users WHERE username  = :name AND password = :password");
+    $usernameCheck->bindParam(':name', $user['username']);
+    $usernameCheck->bindParam(':password', $user['pass']);
+    $usernameCheck->execute();
+    
+    if($usernameCheck->rowCount() === 0){
+      $x["valid"] = false;
+      $x["error"] = "invalid username or password";
+      return $x;
+    }
+    $x = $user;
+    $x["valid"] = true;
+    return $x;
+
   }
 }
 ?>
