@@ -23,7 +23,7 @@
     <div class="colorlib-loader"></div>
 
     <div id="page">
-        <div class="col-md-4 col-md-offset-4 signup">
+        <div class="col-md-4 col-md-offset-4 col-xs-10 col-xs-offset-1 signup">
             <form id="signup-form" method="post" action="rest/user/login">
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -70,7 +70,8 @@
                         alert(user.error);
                     }
                     else{
-                        localStorage.setItem("token", user);
+                        localStorage.setItem("token", user.token);
+                        localStorage.setItem("cinema_id", user.cinema_id);
                         window.location.href = 'views/index.html';
                     }
                 });

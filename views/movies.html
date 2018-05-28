@@ -1,0 +1,65 @@
+<div class="col-md-10 col-md-offset-1">
+    <div class="row">
+        <div class="col-md-12">
+            <form id="create-movie" method="post" action="../movie/create">
+                <div class="form-group">
+                    <label for="name">Movie Name</label>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label for="username">Description</label>
+                    <textarea name="description" class="form-control" id="description" placeholder="description" />
+                </div>
+                <button type="submit" class="btn btn-success">Add Movie</button>
+            </form>
+        </div>
+    </div>
+    <h4 class="title">Movies</h4>
+    <div class="movies">
+    </div>
+</div>
+<script>
+    $("#create-movie").validate({
+            rules: {
+                name: {
+                    minlength: 6
+                },
+                description: {
+                    minlength: 5
+                }
+            },
+            messages: {
+                name: {
+                    required: "Please enter cinema name",
+                    minlength: "Unesi der koje slovo",
+                },
+                description: {
+                    required: "Please enter description",
+                    minlength: "Unesi der koje slovo"
+                }
+            },
+            submitHandler: function (form) {
+                var form = $('#create-movie').serialize();
+                form+="&token="+localStorage.getItem("token");
+                $.post('../rest/movies/create', form, function (added_user) {
+                    getMovies();
+                });
+            }
+        });
+    function getMovies(){$.get('../rest/movies/all/'+localStorage.getItem("cinema_id"), function (movies) {
+        var movie = "";
+        for(var i = 0; i<movies.length;i++){
+            movie += '<div class="col-md-4"> <div class="card">';
+            movie +=  '<div class="author"><a href="#"><h4 class="title">'
+            movie +=movies[i].name
+            movie+='<br /></h4></a></div>';
+            movie += '<div class="content">';
+            movie+='<p class="description">';
+            movie+=movies[i].description;
+            movie+='</p></div></div></div>'
+        }
+        $(".movies").html(movie);
+    });}
+    getMovies();    
+
+</script>
