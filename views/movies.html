@@ -19,47 +19,89 @@
     </div>
 </div>
 <script>
+    var allMovies = [];
     $("#create-movie").validate({
-            rules: {
-                name: {
-                    minlength: 6
-                },
-                description: {
-                    minlength: 5
-                }
+        rules: {
+            name: {
+                minlength: 6
             },
-            messages: {
-                name: {
-                    required: "Please enter cinema name",
-                    minlength: "Unesi der koje slovo",
-                },
-                description: {
-                    required: "Please enter description",
-                    minlength: "Unesi der koje slovo"
-                }
+            description: {
+                minlength: 5
+            }
+        },
+        messages: {
+            name: {
+                required: "Please enter cinema name",
+                minlength: "Unesi der koje slovo",
             },
-            submitHandler: function (form) {
-                var form = $('#create-movie').serialize();
-                form+="&token="+localStorage.getItem("token");
-                $.post('../rest/movies/create', form, function (added_user) {
-                    getMovies();
-                });
+            description: {
+                required: "Please enter description",
+                minlength: "Unesi der koje slovo"
+            }
+        },
+        submitHandler: function (form) {
+            var form = $('#create-movie').serialize();
+            console.log(form);
+            form += "&token=" + localStorage.getItem("token");
+            $.post('../rest/movies/create', form, function (added_user) {
+                getMovies();
+            });
+        }
+    });
+    function deletemovie(id) {
+        $.ajax({
+            url: '../rest/movie/' + id,
+            type: 'DELETE',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json'
+        });
+        getMovies();
+    }
+    function editMovie(id) {
+        
+        var name = $('#movie-name'+id).val()
+        var description = $('#movie-description'+id).val()
+        $.ajax({
+            url: '../rest/movie/' + id,
+            type: 'PUT',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ name: name, description: description }),
+            success: function(){
+                getMovies();
             }
         });
-    function getMovies(){$.get('../rest/movies/all/'+localStorage.getItem("cinema_id"), function (movies) {
+    }
+    function editMovieClick(i) {
         var movie = "";
-        for(var i = 0; i<movies.length;i++){
-            movie += '<div class="col-md-4"> <div class="card">';
-            movie +=  '<div class="author"><a href="#"><h4 class="title">'
-            movie +=movies[i].name
-            movie+='<br /></h4></a></div>';
-            movie += '<div class="content">';
-            movie+='<p class="description">';
-            movie+=movies[i].description;
-            movie+='</p></div></div></div>'
-        }
-        $(".movies").html(movie);
-    });}
-    getMovies();    
+        movie += '<div class="form-group"><label for="name">Movie Name</label><input id="movie-name' + allMovies[i].id + '" type="text" name="name" class="form-control" value=' + allMovies[i].name + ' placeholder="Name">'
+        movie += '<label for="name">Movie Name</label><textarea type="text" id="movie-description' + allMovies[i].id + '" name="name" class="form-control" placeholder="Name">' + allMovies[i].description + '</textarea></div>'
+        movie += '<button style="margin-left:10px" onclick="editMovie(' + allMovies[i].id + ')" class="btn btn-info btn-sm">Edit</button></div>'
+        $("#movie" + allMovies[i].id).html(movie)
+    }
+    function getMovies() {
+        $.get('../rest/movies/all/' + localStorage.getItem("cinema_id"), function (movies) {
+            var movie = "";
+            for (var i = 0; i < movies.length; i++) {
+
+                if (movies[i].name.length > 0) {
+                    movie += '<div class="col-md-4"> <div style="padding:10px" class="card">';
+                    movie += '<div class="author"><a href="#"><h4 class="title">'
+                    movie += movies[i].name
+                    movie += '<br /></h4></a></div>';
+                    movie += '<div class="content" id="movie' + movies[i].id + '">';
+                    movie += '<p class="description">';
+                    movie += movies[i].description;
+                    movie += '</p>'
+                    movie += '<button style="right:0" onclick="deletemovie(' + movies[i].id + ')" class="btn btn-danger btn-sm">Delete</button>'
+                    movie += '<button style="margin-left:10px" onclick="editMovieClick(' + i + ')" class="btn btn-info btn-sm">Edit</button>'
+                    movie += '</div></div></div>'
+                }
+            }
+            allMovies = movies;
+            $(".movies").html(movie);
+        });
+    }
+
+    getMovies();
 
 </script>

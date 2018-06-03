@@ -15,3 +15,4 @@ require 'modules/auth.php';
 require 'modules/movies.php';
 
 Flight::start();
+?>

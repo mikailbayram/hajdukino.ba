@@ -1,7 +1,7 @@
 <?php
 use \Firebase\JWT\JWT;
 
-Flight::route('POST /movies/create', function () {
+Flight::route('POST /halls/create', function () {
     $request = Flight::request();
     $movieDb = new Movie();
     $config = include('config.php');                

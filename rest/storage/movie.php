@@ -37,4 +37,14 @@ class Movie
         $x = $statement->fetchAll();
         return $x;
     }
+
+    public function delete_movie($id){
+        $stmt = $this->database->handler->prepare('DELETE FROM Movies WHERE id = :id');
+        $stmt->execute(['id' => $id]);                
+    }
+
+    public function edit_movie($id, $name, $description){
+        $stmt = $this->database->handler->prepare('UPDATE Movies SET name=:name, description=:description WHERE id = :id');
+        $stmt->execute(['id' => $id, 'name'=>$name, 'description'=>$description]);
+    }
 }
