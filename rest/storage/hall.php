@@ -41,7 +41,7 @@ class Hall
     }
 
     public function edit_hall($id, $name, $description){
-        $stmt = $this->database->handler->prepare('UPDATE Hall SET name=:name WHERE id = :id');
+        $stmt = $this->database->handler->prepare('UPDATE Halls SET name=:name WHERE id = :id');
         $stmt->execute(['id' => $id, 'name'=>$name]);
     }
 }

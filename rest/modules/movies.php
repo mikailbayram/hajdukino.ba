@@ -26,8 +26,6 @@ Flight::route('GET /movies/all/@id', function ($id) {
 Flight::route('PUT /movie/@id', function($id){
     $request = Flight::request();
     $movieDb = new Movie();
-    //Flight::json($request);
-
     $movieDb->edit_movie($id, $request->data->name,$request->data->description);
 });
 

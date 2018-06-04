@@ -71,6 +71,12 @@
                             <p>Halls</p>
                         </a>
                     </li>
+                    <li>
+                        <a href="#projections" id="projections-link">
+                            <i class="pe-7s-user"></i>
+                            <p>Projections</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -185,6 +191,7 @@
                             <section id="user" data-load="user.html"></section>
                             <section id="movies" data-load="movies.html"></section>
                             <section id="halls" data-load="halls.html"></section>
+                            <section id="projections" data-load="projections.html"></section>
                         </main>
                     </div>
                 </div>
@@ -222,7 +229,7 @@
         templateDir: "./",
         pageNotFound: "error_404"
     });
-    $(['dashboard', 'user', 'movies', 'halls']).each(function (index, name) {
+    $(['dashboard', 'user', 'movies', 'halls', 'projections']).each(function (index, name) {
         app.route({
             view: name,
             load: name + ".html",

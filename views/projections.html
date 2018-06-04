@@ -1,0 +1,90 @@
+<div class="col-md-10 col-md-offset-1">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="create-hall">
+                <div class="form-group">
+                    <label for="name">New Projection</label>
+                    <div class="projection-movies">
+                    </div>
+                    <div class="projection-halls">
+                    </div>
+                </div>
+                <button onclick="createProjection()" class="btn btn-success">Add Projection</button>
+            </div>
+        </div>
+    </div>
+    <h4 class="title">Projections</h4>
+    <div class="projections">
+    </div>
+</div>
+<script>
+    var allMovies = [];
+    function createProjection() {
+        var movie = $("#movie-val").val();
+        var hall = $("#hall-val").val();
+        $.ajax({
+            url: '../rest/projection/create',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ movie_name: movie, hall_name: hall, cinema_id: localStorage.getItem("cinema_id") }),
+            success: function () {
+                getProjections();
+            }
+        });
+    }
+    function getMovies() {
+        $.get('../rest/movies/all/' + localStorage.getItem("cinema_id"), function (movies) {
+            var mvs = "";
+            mvs += '<select id="movie-val" class="form-control">';
+            for (var i = 0; i < movies.length; i++) {
+                if (movies[i].name.length > 0)
+                    mvs += '<option value=' + movies[i].name + '>' + movies[i].name + '</option>'
+            }
+            mvs += '</select>'
+            $(".projection-movies").append(mvs);
+        });
+    }
+    function getHalls() {
+        $.get('../rest/halls/all/' + localStorage.getItem("cinema_id"), function (halls) {
+            var mvs = "";
+            mvs += '<select id="hall-val" class="form-control" style="margin-top:10px">';
+            for (var i = 0; i < halls.length; i++) {
+                if (halls[i].name.length > 0)
+                    mvs += '<option value=' + halls[i].name + '>' + halls[i].name + '</option>'
+            }
+            mvs += '</select>'
+            $(".projection-halls").append(mvs);
+        });
+    }
+    function deleteProjection(id) {
+        $.ajax({
+            url: '../rest/projection/' + id,
+            type: 'DELETE',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json'
+        });
+        getProjections();
+    }
+    function getProjections() {
+        $.get('../rest/projections/all/' + localStorage.getItem("cinema_id"), function (movies) {
+            var movie = "";
+            for (var i = 0; i < movies.length; i++) {
+                movie += '<div class="col-md-4"> <div style="padding:10px" class="card">';
+                movie += '<div class="content">';
+                movie += '<p class="description"> Hall: ';
+                movie += movies[i].hall_name;
+                movie += '</p>';
+                movie += '<p class="description"> Movie: ';
+                movie += movies[i].movie_name;
+                movie += '</p>'
+                movie += '<button onclick="deleteProjection('+movies[i].id+')" class="btn btn-danger">Delete</button>'
+                movie += '</div></div></div>'
+            }
+            allMovies = movies;
+            $(".projections").html(movie);
+        });
+    }
+    getMovies();
+    getHalls();
+    getProjections();
+</script>

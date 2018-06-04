@@ -3,37 +3,34 @@ use \Firebase\JWT\JWT;
 
 Flight::route('POST /halls/create', function () {
     $request = Flight::request();
-    $movieDb = new Movie();
+    $hallDb = new Hall();
     $config = include('config.php');                
     $key = $config["jwtKey"];
     $user = JWT::decode($request->data->token, $key, ["HS256"]);
     $movie = [
         'name' => $request->data->name,
-        'description' => $request->data->description,
         'cinema_id' => $user->data->cinema_id,
     ];
 
-    $res = $movieDb->add_movie($movie);
+    $res = $hallDb->add_hall($movie);
     Flight::json($res);
 });
 
-Flight::route('GET /movies/all/@id', function ($id) {
-    $movieDb = new Movie();
-    $res = $movieDb->get_all_movies($id);
+Flight::route('GET /halls/all/@id', function ($id) {
+    $hallDb = new Hall();
+    $res = $hallDb->get_all_halls($id);
     Flight::json($res);
 });
 
-Flight::route('PUT /movie/@id', function($id){
+Flight::route('PUT /hall/@id', function($id){
     $request = Flight::request();
-    $movieDb = new Movie();
-    //Flight::json($request);
-
-    $movieDb->edit_movie($id, $request->data->name,$request->data->description);
+    $movieDb = new Hall();
+    $movieDb->edit_hall($id, $request->data->name,$request->data->description);
 });
 
-FLIGHT::route('DELETE /movie/@id', function($id){
-    $movieDb = new Movie();
-    $movieDb->delete_movie($id);
+FLIGHT::route('DELETE /hall/@id', function($id){
+    $hallDb = new Hall();
+    $hallDb->delete_hall($id);
 });
 
 ?>
